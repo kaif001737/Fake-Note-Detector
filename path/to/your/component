@@ -1,0 +1,67 @@
+import { useState, useEffect } from 'react';
+
+function YourComponent() {
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  
+  const handleAnalyzeClick = () => {
+    setIsAnalyzing(true);
+    setProgress(0);
+    
+    // Start your existing analysis logic
+    // ... existing analysis code ...
+    
+    // Simulate progress over 15 seconds
+    const totalDuration = 15000; // 15 seconds in milliseconds
+    const interval = 150; // Update every 150ms for smooth animation
+    const incrementValue = (interval / totalDuration) * 100;
+    
+    const progressTimer = setInterval(() => {
+      setProgress(prevProgress => {
+        const newProgress = prevProgress + incrementValue;
+        if (newProgress >= 100) {
+          clearInterval(progressTimer);
+          // When complete, you might want to trigger the actual completion
+          // setIsAnalyzing(false); // Uncomment if you want to auto-hide the loader
+          return 100;
+        }
+        return newProgress;
+      });
+    }, interval);
+    
+    // Optional: If your analysis completes before 15 seconds, clear the timer
+    // and set progress to 100%
+    // This would go in your analysis completion callback
+  };
+  
+  return (
+    <div>
+      {/* ... existing code ... */}
+      
+      <button 
+        onClick={handleAnalyzeClick}
+        disabled={isAnalyzing}
+      >
+        Analyze Note
+      </button>
+      
+      {isAnalyzing && (
+        <div className="loading-container">
+          <div className="progress-bar">
+            <div 
+              className="progress-fill" 
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          <div className="progress-text">
+            {Math.round(progress)}%
+          </div>
+        </div>
+      )}
+      
+      {/* ... existing code ... */}
+    </div>
+  );
+}
+
+export default YourComponent; 
